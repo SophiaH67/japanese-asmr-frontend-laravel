@@ -65,6 +65,6 @@ class DownloadPolicy
      */
     public function delete(User $user, Download $download)
     {
-        return $user->id === $download->user_id;
+        return $user->id == $download->user_id;
     }
 }
