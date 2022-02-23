@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\DownloadController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,8 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::resource('downloads', DownloadController::class)->except(['index', 'create', 'show'])->middleware('auth');
+Route::get('/dashboard', [DownloadController::class, 'index'])->middleware('auth')->name('dashboard');
 
 require __DIR__.'/auth.php';
