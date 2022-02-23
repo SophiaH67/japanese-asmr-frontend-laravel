@@ -30,7 +30,7 @@ class DownloadPolicy
      */
     public function view(User $user, Download $download)
     {
-        return $user->id === $download->user_id;
+        return false;
     }
 
     /**

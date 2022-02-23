@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDownloadRequest;
 use App\Http\Requests\UpdateDownloadRequest;
 use App\Models\Download;
+use App\Jobs\RenderVideo;
 
 class DownloadController extends Controller
 {
@@ -50,6 +51,8 @@ class DownloadController extends Controller
     {
         $user = auth()->user();
         $download = $user->downloads()->create($request->validated());
+        $download->save();
+        RenderVideo::dispatch($download);
         return redirect()->route('dashboard');
     }
 

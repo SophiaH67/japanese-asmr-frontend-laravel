@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Database\Factories\UserFactory;
+use Illuminate\Support\Facades\Queue;
 
 class CreateTest extends TestCase
 {
@@ -75,5 +76,24 @@ class CreateTest extends TestCase
         $this->assertDatabaseMissing('downloads', [
             'url' => $url,
         ]);
+    }
+
+    /**
+     * When the model is created, a RenderVideo job should be dispatched.
+     *
+     * @return void
+     */
+    public function test_model_is_created_job_is_dispatched()
+    {
+        Queue::fake();
+
+        $user = UserFactory::new()->create();
+        $url = $this->faker->url;
+
+        $response = $this->actingAs($user)->post(route('downloads.store'), [
+            'url' => $url,
+        ]);
+
+        Queue::assertPushed(\App\Jobs\RenderVideo::class);
     }
 }
