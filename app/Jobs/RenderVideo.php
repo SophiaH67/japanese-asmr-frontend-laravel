@@ -23,6 +23,13 @@ class RenderVideo implements ShouldQueue
     protected $download;
 
     /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 1500;
+
+    /**
      * Create a new job instance.
      *
      * @param  Download  $download
@@ -40,6 +47,11 @@ class RenderVideo implements ShouldQueue
      */
     public function handle()
     {
+        $this->download = Download::findOrFail($this->download->id);
+        $this->download->update([
+            'status' => 'downloading',
+        ]);
+
         $command = ['japanese-asmr', $this->download->url];
 
         if ($this->download->output_path !== null) {
@@ -48,6 +60,13 @@ class RenderVideo implements ShouldQueue
 
         $process = new Process($command);
 
+        $process->setTimeout($this->timeout);
+        $process->setIdleTimeout($this->timeout);
+
         $process->run();
+
+        $this->download->update([
+            'status' => $process->isSuccessful() ? 'success' : 'error',
+        ]);
     }
 }
