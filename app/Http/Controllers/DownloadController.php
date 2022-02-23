@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDownloadRequest;
 use App\Http\Requests\UpdateDownloadRequest;
 use App\Models\Download;
+use App\Jobs\UpdateMetadata;
 use App\Jobs\RenderVideo;
+use Illuminate\Support\Facades\Bus;
 
 class DownloadController extends Controller
 {
@@ -52,7 +54,10 @@ class DownloadController extends Controller
         $user = auth()->user();
         $download = $user->downloads()->create($request->validated());
         $download->save();
-        RenderVideo::dispatch($download);
+        Bus::chain([
+            new UpdateMetadata($download),
+            new RenderVideo($download),
+        ])->dispatch();
         return redirect()->route('dashboard');
     }
 
