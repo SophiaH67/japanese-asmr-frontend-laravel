@@ -16,7 +16,7 @@ RUN php artisan route:cache
 RUN php artisan view:cache
 RUN php artisan optimize
 
-FROM webdevops/php-apache:8.0-alpine AS runner
+FROM webdevops/php-apache:ubuntu-16.04 AS runner
 WORKDIR /app
 COPY --from=composer-builder /app/ /app/
 RUN mkdir resources/views/errors
@@ -24,9 +24,11 @@ RUN chmod 0777 -R /app/storage/
 ENV WEB_DOCUMENT_ROOT /app/public/
 
 # Install japanese-asmr pypi package
-RUN apk add --update --no-cache python3 && ln -sf python3 /usr/bin/python
-RUN python3 -m ensurepip
-RUN pip3 install japanese-asmr
+RUN apt-get update
+RUN apt-get install -y python-pip
+RUN pip install japanese-asmr
+# Make sure it install chromium
+RUN echo "from requests_html import HTMLSession; session = HTMLSession(); session.get('https://www.google.com/');" | python
 
 # This is stupid, I know this stupid, but I have to do this
 # because this garbage framework loads environment variables at
