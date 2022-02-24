@@ -26,7 +26,7 @@ ENV WEB_DOCUMENT_ROOT /app/public/
 # Install japanese-asmr pypi package
 RUN apt-get update
 RUN apt-get install -y python3-pip python3
-RUN pip install japanese-asmr
+RUN pip3 install japanese-asmr
 # Make sure it install chromium
 RUN echo "from requests_html import HTMLSession; session = HTMLSession(); session.get('https://www.google.com/');" | python3
 
