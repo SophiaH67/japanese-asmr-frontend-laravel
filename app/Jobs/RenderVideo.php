@@ -53,10 +53,9 @@ class RenderVideo implements ShouldQueue
             'status' => 'downloading',
         ]);
 
-        $output_folder = "./storage/app/public/{$this->download->title}/";
-        // Clean $output_folder
-        $output_folder = str_replace('/', '_', $output_folder);
-        $output_folder = str_replace('\\', '_', $output_folder);
+        $title = str_replace('/', '_', $this->download->title);
+        $title = str_replace(' ', '_', $title);
+        $output_folder = "./storage/app/public/{$title}/";
 
         // Recursively create the output folder if it doesn't exist.
         if (!is_dir($output_folder)) {
