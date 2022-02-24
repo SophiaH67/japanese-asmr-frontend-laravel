@@ -42,4 +42,4 @@ RUN echo "from requests_html import HTMLSession; session = HTMLSession(); sessio
 # because this framework loads environment variables at
 # build time instead of at runtime like ANY properly written software
 # or framework. If you have a better solution, please make a PR.
-CMD ["bash", "-c", "php artisan config:cache && php artisan route:clear && php artisan migrate --force && php artisan serve"]
+CMD ["bash", "-c", "php artisan config:cache && php artisan route:clear && php artisan migrate --force && php artisan serve --host 0.0.0.0"]
