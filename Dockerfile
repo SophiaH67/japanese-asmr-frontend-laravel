@@ -26,8 +26,7 @@ ENV WEB_DOCUMENT_ROOT /app/public/
 ENV DEBIAN_FRONTEND noninteractive
 # Install PHP
 RUN apt-get update
-RUN apt-get install -y --no-install-recommends \
-    php7.0-cli php7.0-common php7.0-json php7.0-opcache php7.0-mysql php7.0-fpm php7.0-curl php7.0-gd php7.0-mbstring php7.0-xml php7.0-zip php7.0-bcmath php7.0-intl php7.0-soap php7.0-xsl php7.0-redis php7.0-gmp php7.0-imagick php7.0-xdebug php7.0-zip php7.0-bz2 php7.0-xmlrpc php7.0-dev php7.0-imap php7.0-pspell php7.0-readline php7.0-tidy php7.0-t1lib php7.0-mcrypt php7.0-curl php7.0-json php7.0-xsl php7.0-intl php7.0-mysql php7.0-opcache php7.0-redis php7.0-xdebug php7.0-xsl php7.0-mbstring php7.0-gd php7.0-mysql php7.0-curl php7.0-zip php7.0-bz2 php7.0-xmlrpc php7.0-dev php7.0-imap php7.0-pspell php7.0-readline php7.0-tidy php7.0-t1lib php7.0-mcrypt php7.0-curl php7.0-json php7.0-xsl php7.0-intl php7.0-mysql php7.0-opcache php7.0-redis php7.0-xdebug php7.0-xsl php7.0-mbstring php7.0-gd php7.0-mysql php7.0-curl php7.0-zip php7.0-bz2 php7.0-xmlrpc php7.0-dev php7.0-imap php7
+RUN apt-get install -y --no-install-recommends php libapache2-mod-php
 
 # Install japanese-asmr pypi package
 RUN apt-get install software-properties-common -y
