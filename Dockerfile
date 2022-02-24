@@ -25,13 +25,13 @@ ENV WEB_DOCUMENT_ROOT /app/public/
 
 # Install japanese-asmr pypi package
 RUN apt-get update
-RUN apt-get install -y python-pip
+RUN apt-get install -y python3-pip python3
 RUN pip install japanese-asmr
 # Make sure it install chromium
-RUN echo "from requests_html import HTMLSession; session = HTMLSession(); session.get('https://www.google.com/');" | python
+RUN echo "from requests_html import HTMLSession; session = HTMLSession(); session.get('https://www.google.com/');" | python3
 
 # This is stupid, I know this stupid, but I have to do this
-# because this garbage framework loads environment variables at
+# because this framework loads environment variables at
 # build time instead of at runtime like ANY properly written software
 # or framework. If you have a better solution, please make a PR.
 CMD ["bash", "-c", "php artisan config:cache && php artisan route:clear && php artisan migrate --force && /usr/bin/python3 /usr/bin/supervisord -c /opt/docker/etc/supervisor.conf --logfile /dev/null --pidfile /dev/null --user root"]
