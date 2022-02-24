@@ -25,7 +25,6 @@ class StoreDownloadRequest extends FormRequest
     {
         return [
             'url' => 'required|url',
-            'output_path' => 'nullable|string',
         ];
     }
 }

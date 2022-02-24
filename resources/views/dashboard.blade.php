@@ -41,7 +41,7 @@
                                 <div>
                                     {{-- Show download->status --}}
                                     <label @class([
-                                        'inline-flex items-center px-3 py-0.5 mt-2 text-sm leading-5 font-medium transition duration-150 ease-in-out bg-white border rounded-lg shadow-sm',
+                                        'inline-flex items-center px-3 py-0.5 text-sm leading-5 font-medium transition duration-150 ease-in-out bg-white border rounded-lg shadow-sm',
                                         'bg-green-100 text-green-700 border-green-300' => $download->status == 'success',
                                         'bg-sky-100 text-sky-700 border-sky-300' => $download->status == 'downloading',
                                         'bg-red-100 text-red-700 border-red-300' => $download->status == 'error',
@@ -49,10 +49,21 @@
                                         ])>
                                         {{ $download->status }}
                                     </label>
-                                    <label class="inline-flex items-center px-3 py-0.5 mt-2 text-sm leading-5 font-medium text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-lg shadow-sm">
+                                    <label class="inline-flex items-center px-3 py-0.5 text-sm leading-5 font-medium text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-lg shadow-sm">
                                         {{ $download->created_at->diffForHumans() }}
                                     </label>
-                                    <button action="submit" class="inline-flex items-center px-3 py-0.5 mt-2 text-sm leading-5 font-medium text-red-700 transition duration-150 ease-in-out bg-white border border-red-300 rounded-lg shadow-sm hover:text-white hover:bg-red-300 focus:outline-none focus:shadow-outline-red focus:border-red-300">
+                                    @if ($download->status == 'success')
+                                        <button type="button" onclick="
+                                            let files = {{ Illuminate\Support\Js::from($download->files) }};
+                                            files = files.map(file => file.path.replace('./', '/').replace('/app/public', ''));
+                                            files.forEach(file => {
+                                                window.open(file, '_blank');
+                                            });
+                                        " class="inline-flex items-center px-3 py-0.5 text-sm leading-5 font-medium text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-lg shadow-sm">
+                                            Download
+                                        </button>
+                                    @endif
+                                    <button action="submit" class="inline-flex items-center px-3 py-0.5 text-sm leading-5 font-medium text-red-700 transition duration-150 ease-in-out bg-white border border-red-300 rounded-lg shadow-sm hover:text-white hover:bg-red-300 focus:outline-none focus:shadow-outline-red focus:border-red-300">
                                         Delete
                                     </button>
                                 </div>

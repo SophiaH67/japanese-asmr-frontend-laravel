@@ -10,6 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Symfony\Component\Process\Process;
 use App\Models\Download;
+use Illuminate\Support\Facades\Log;
 
 class RenderVideo implements ShouldQueue
 {
@@ -52,21 +53,40 @@ class RenderVideo implements ShouldQueue
             'status' => 'downloading',
         ]);
 
-        $command = ['japanese-asmr', $this->download->url];
-
-        if ($this->download->output_path !== null) {
-            $command[] = $this->download->output_path;
+        $output_folder = "./storage/app/public/{$this->download->title}/";
+        // Recursively create the output folder if it doesn't exist.
+        if (!is_dir($output_folder)) {
+            mkdir($output_folder, 0777, true);
         }
+        $command = ['japanese-asmr', $this->download->url, $output_folder];
 
         $process = new Process($command);
 
         $process->setTimeout($this->timeout);
         $process->setIdleTimeout($this->timeout);
 
-        $process->run();
+        // If there are .mp4 files in output folder, assume the job is already done.
+        if (glob("{$output_folder}*.mp4") == []) {
+            $process->run();
+
+            if (!$process->isSuccessful()) {
+                Log::error("Command failed: {$process->getCommandLine()} with output: {$process->getErrorOutput()}");
+                $this->download->update([
+                    'status' => 'error',
+                ]);
+                return;
+            }
+        }
 
         $this->download->update([
-            'status' => $process->isSuccessful() ? 'success' : 'error',
+            'status' => 'success',
         ]);
+
+        foreach (glob("{$output_folder}*.mp4") as $file) {
+            $this->download->files()->create([
+                'path' => $file,
+                'download_id' => $this->download->id,
+            ]);
+        }
     }
 }
