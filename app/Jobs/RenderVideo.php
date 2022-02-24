@@ -54,6 +54,10 @@ class RenderVideo implements ShouldQueue
         ]);
 
         $output_folder = "./storage/app/public/{$this->download->title}/";
+        // Clean $output_folder
+        $output_folder = str_replace('/', '_', $output_folder);
+        $output_folder = str_replace('\\', '_', $output_folder);
+
         // Recursively create the output folder if it doesn't exist.
         if (!is_dir($output_folder)) {
             mkdir($output_folder, 0777, true);
