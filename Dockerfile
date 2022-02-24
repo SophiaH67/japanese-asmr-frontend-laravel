@@ -24,11 +24,15 @@ RUN chmod 0777 -R /app/storage/
 ENV WEB_DOCUMENT_ROOT /app/public/
 
 # Install japanese-asmr pypi package
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
-RUN apt-get install -y python3-pip python3
-RUN pip3 install japanese-asmr
+RUN apt-get install software-properties-common -y
+RUN add-apt-repository ppa:deadsnakes/ppa -y
+RUN apt-get update
+RUN apt-get install -y python3.10
+RUN python3.10 -m pip install japanese-asmr
 # Make sure it install chromium
-RUN echo "from requests_html import HTMLSession; session = HTMLSession(); session.get('https://www.google.com/');" | python3
+RUN echo "from requests_html import HTMLSession; session = HTMLSession(); session.get('https://www.google.com/');" | python3.10
 
 # This is stupid, I know this stupid, but I have to do this
 # because this framework loads environment variables at
