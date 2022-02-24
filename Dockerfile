@@ -29,7 +29,8 @@ RUN apt-get update
 RUN apt-get install software-properties-common -y
 RUN add-apt-repository ppa:deadsnakes/ppa -y
 RUN apt-get update
-RUN apt-get install -y python3.10
+RUN apt-get install -y python3.10 python3.10-distutils
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 RUN python3.10 -m pip install japanese-asmr
 # Make sure it install chromium
 RUN echo "from requests_html import HTMLSession; session = HTMLSession(); session.get('https://www.google.com/');" | python3.10
