@@ -31,7 +31,9 @@ RUN apt-get install -y --no-install-recommends software-properties-common ffmpeg
 RUN add-apt-repository ppa:deadsnakes/ppa -y
 RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update
-RUN apt-get install -y python3.10 python3.10-distutils php8.0-common php8.0-cli php8.0-bz2 php8.0-curl php8.0-intl php8.0-mysql php8.0-readline php8.0-xml
+RUN apt-get install -y python3.10 python3.10-distutils php8.0-common php8.0-cli php8.0-bz2 php8.0-curl php8.0-intl php8.0-mysql php8.0-readline php8.0-xml php8.0-dev
+RUN pecl install pdo
+RUN pecl install pdo_pgsql
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 RUN python3.10 -m pip install japanese-asmr
 
