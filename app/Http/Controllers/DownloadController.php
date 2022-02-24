@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreDownloadRequest;
 use App\Http\Requests\UpdateDownloadRequest;
 use App\Models\Download;
+use App\Models\File;
 use App\Jobs\UpdateMetadata;
 use App\Jobs\RenderVideo;
 use Illuminate\Support\Facades\Bus;
@@ -104,6 +105,18 @@ class DownloadController extends Controller
      */
     public function destroy(Download $download)
     {
+        foreach ($download->files as $file) {
+            // If this instance is the only one in the database, delete the file.
+            $files_referencing_this_path = File::where('path', $file->path)->count();
+            if ($files_referencing_this_path == 1) {
+                $actual_path = "../{$file->path}";
+                if (file_exists($actual_path)) {
+                    Log::emergency("File {$file->path} exists.");
+                    unlink($actual_path);
+                }
+            }
+            $file->delete();
+        }
         $download->delete();
         return redirect()->route('dashboard');
     }
