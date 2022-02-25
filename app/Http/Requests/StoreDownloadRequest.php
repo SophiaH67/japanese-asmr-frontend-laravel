@@ -24,7 +24,8 @@ class StoreDownloadRequest extends FormRequest
     public function rules()
     {
         return [
-            'url' => 'required|url',
+            // URL has to be unique per user
+            'url' => 'required|url|unique:downloads,url,NULL,id,user_id,' . auth()->id(),
         ];
     }
 }
