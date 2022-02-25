@@ -48,6 +48,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      # Rename server.Dockerfile to Dockerfile
+      - name: Rename Dockerfile
+        run: mv server.Dockerfile Dockerfile
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -55,5 +59,5 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}-server
           labels: ${{ steps.meta.outputs.labels }}
