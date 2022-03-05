@@ -30,7 +30,7 @@ class DownloadController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $downloads = $user->downloads()->orderBy('created_at', 'desc');
+        $downloads = $user->downloads()->orderBy('created_at', 'desc')->paginate(1000000000000);
         return view('dashboard', compact('downloads'));
     }
 
